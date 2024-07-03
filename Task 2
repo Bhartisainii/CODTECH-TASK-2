@@ -1,0 +1,94 @@
+TASK2=
+Student Database Management Project 
+
+CREATE DATABASE StudentManagement;
+
+-- Use the created database
+USE StudentManagement;
+
+-- Create Students Table
+CREATE TABLE Students (
+    StudentID INT AUTO_INCREMENT PRIMARY KEY,
+    FirstName VARCHAR(255) NOT NULL,
+    LastName VARCHAR(255) NOT NULL,
+    DateOfBirth DATE,
+    Email VARCHAR(100) UNIQUE,
+    Phone VARCHAR(20),
+    Address VARCHAR(255)
+);
+
+-- Create Courses Table
+CREATE TABLE Courses (
+    CourseID INT AUTO_INCREMENT PRIMARY KEY,
+    CourseName VARCHAR(255) NOT NULL,
+    Description TEXT,
+    Credits INT
+);
+
+-- Create Enrollments Table
+CREATE TABLE Enrollments (
+    EnrollmentID INT AUTO_INCREMENT PRIMARY KEY,
+    StudentID INT,
+    CourseID INT,
+    EnrollmentDate DATE,
+    Grade CHAR(2),
+    FOREIGN KEY (StudentID) REFERENCES Students(StudentID),
+    FOREIGN KEY (CourseID) REFERENCES Courses(CourseID)
+);
+
+-- Insert Students
+INSERT INTO Students (FirstName, LastName, DateOfBirth, Email, Phone, Address) VALUES
+('John', 'Doe', '2000-01-01', 'john.doe@example.com', '123-456-7890', '123 Elm St'),
+('Jane', 'Smith', '1999-05-15', 'jane.smith@example.com', '987-654-3210', '456 Oak St');
+
+-- Insert Courses
+INSERT INTO Courses (CourseName, Description, Credits) VALUES
+('Database Systems', 'Introduction to database systems', 3),
+('Algorithms', 'Study of algorithms', 4);
+
+-- Insert Enrollments
+INSERT INTO Enrollments (StudentID, CourseID, EnrollmentDate, Grade) VALUES
+(1, 1, '2024-06-01', 'A'),
+(2, 2, '2024-06-02', 'B');
+
+-- Update a Student's Address
+UPDATE Students SET Address = '789 Pine St' WHERE StudentID = 1;
+
+-- Update a Course's Description
+UPDATE Courses SET Description = 'Advanced study of algorithms' WHERE CourseID = 2;
+
+-- Update an Enrollment's Grade
+UPDATE Enrollments SET Grade = 'A+' WHERE EnrollmentID = 1;
+
+-- Delete a Student
+DELETE FROM Students WHERE StudentID = 2;
+
+-- Delete a Course
+DELETE FROM Courses WHERE CourseID = 2;
+
+-- Delete an Enrollment
+DELETE FROM Enrollments WHERE EnrollmentID = 1;
+
+-- Delete related enrollments first
+DELETE FROM Enrollments WHERE StudentID = 2;
+
+-- Retrieve all Students
+SELECT * FROM Students;
+
+-- Retrieve all Courses
+SELECT * FROM Courses;
+
+-- Retrieve all Enrollments
+SELECT * FROM Enrollments;
+
+-- Retrieve Enrollments with Student and Course Details
+SELECT e.EnrollmentID, s.FirstName, s.LastName, c.CourseName, e.EnrollmentDate, e.Grade
+FROM Enrollments e
+JOIN Students s ON e.StudentID = s.StudentID
+JOIN Courses c ON e.CourseID = c.CourseID;
+
+-- Retrieve Students enrolled in a specific Course
+SELECT s.FirstName, s.LastName
+FROM Enrollments e
+JOIN Students s ON e.StudentID = s.StudentID
+WHERE e.CourseID = 1;
